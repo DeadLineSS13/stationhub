@@ -24,6 +24,16 @@
     <!-- valid values: Error|Detail|Info -->
     <BeautyLogLevel>Error</BeautyLogLevel>
     <UseAppHost>true</UseAppHost>
+    <CFBundleName>StationHub</CFBundleName> <!-- Also defines .app file name -->
+    <CFBundleDisplayName>UnityStationLauncher</CFBundleDisplayName>
+    <CFBundleIdentifier>com.unitystation</CFBundleIdentifier>
+    <CFBundleVersion>1.0.0</CFBundleVersion>
+    <CFBundlePackageType>APPL</CFBundlePackageType>
+    <CFBundleSignature>????</CFBundleSignature>
+    <CFBundleExecutable>StationHub</CFBundleExecutable>
+    <CFBundleIconFile>StationHub.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
+    <NSPrincipalClass>NSApplication</NSPrincipalClass>
+    <NSHighResolutionCapable>true</NSHighResolutionCapable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
