@@ -11,11 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target-platform:
-          - "win-x64"
-          - "linux-x64"
     env:
       TEAM_ID: MY_TEAM_ID
       SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
