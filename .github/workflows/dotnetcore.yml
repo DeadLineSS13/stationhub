@@ -29,7 +29,7 @@ jobs:
           dotnet test
       - name: Publish
         run: |
-          if matrix.target-platform == "osx-x64"
+          if {{ matrix.target-platform }} == "osx-x64"
           then
             dotnet publish  --configuration Release --runtime osx-x64 --cfbundlename UnitystationLauncher 
                             --cfbundledisplayname UnitystationLauncher --useapphost true --output ~/publish
