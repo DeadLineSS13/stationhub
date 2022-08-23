@@ -23,6 +23,7 @@
     <DisablePatch>False</DisablePatch>
     <!-- valid values: Error|Detail|Info -->
     <BeautyLogLevel>Error</BeautyLogLevel>
+    <UseAppHost>true</UseAppHost>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
