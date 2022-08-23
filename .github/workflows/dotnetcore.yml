@@ -16,6 +16,7 @@ jobs:
         target-platform:
           - "win-x64"
           - "linux-x64"
+          - "osx-x64"
 
     steps:
       - uses: actions/checkout@v1
@@ -28,30 +29,15 @@ jobs:
           dotnet test
       - name: Publish
         run: |
-          dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
+          if ${{ matrix.target-platform }} == "osx-x64"
+            dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish-osx
+          else
+            dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
+          end
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-${{ matrix.target-platform }}
-          path: ~/publish
-  build-osx:
-    runs-on: ubuntu-lates
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x'
-      - name: Test
-        run: |
-          dotnet test
-      - name: Publish
-        run: |
-          dotnet publish --configuration Release --runtime osx-x64 --output ~/publish-osx
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: StationHub-osx-x64
           path: ~/publish
 
   format:
