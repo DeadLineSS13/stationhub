@@ -25,20 +25,20 @@ jobs:
           dotnet test
       - name: Publish Windows
         run: |
-          dotnet publish --configuration Release --runtime win-x64 --output ~/publish
+          dotnet publish --configuration Release --runtime win-x64 --output ~/publish-win
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-win-x64
-          path: ~/publish
+          path: ~/publish-win
       - name: Publish Linux
         run: |
-          dotnet publish --configuration Release --runtime linux-x64 --output ~/publish
+          dotnet publish --configuration Release --runtime linux-x64 --output ~/publish-linux
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-linux-x64
-          path: ~/publish
+          path: ~/publish-linux
       - name: Publish app
         run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
       - name: Setup Keychain
