@@ -16,33 +16,6 @@ jobs:
         target-platform:
           - "win-x64"
           - "linux-x64"
-          - "osx-x64"
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x'
-      - name: Test
-        run: |
-          dotnet test
-      - name: Publish
-        run: |
-          dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: StationHub-${{ matrix.target-platform }}
-          path: ~/publish
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target-platform:
-          - "win-x64"
-          - "linux-x64"
 
     steps:
       - uses: actions/checkout@v1
