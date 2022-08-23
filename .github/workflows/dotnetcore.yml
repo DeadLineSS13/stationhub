@@ -29,7 +29,7 @@ jobs:
           dotnet test
       - name: Publish
         run: |
-          dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
+          dotnet publish --configuration Release --self-contained --runtime ${{ matrix.target-platform }} -p:PublishSingleFile=true --output ~/publish
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
