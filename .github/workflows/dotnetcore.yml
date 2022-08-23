@@ -11,11 +11,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TEAM_ID: MY_TEAM_ID
+      SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
     strategy:
       matrix:
         target-platform:
           - "win-x64"
           - "linux-x64"
+          - "osx-x64"
 
     steps:
       - uses: actions/checkout@v1
@@ -33,52 +37,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-${{ matrix.target-platform }}
-          path: ~/publish
-  build-osx-x64:
-    runs-on: macos-last
-    env:
-      TEAM_ID: MY_TEAM_ID
-      SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
-    steps:
-      - name: Setup Keychain
-        run: |
-          security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
-          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
-          security import certificate.p12 -k build.keychain -P "${{ secrets.MACOS_CERTIFICATE_PWD}}" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
-          xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
-      - uses: actions/checkout@v1
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x'
-      - name: Test
-        run: |
-          dotnet test
-      - name: Publish
-        run: |
-          dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/UnitystationLauncher.app/Contents/MacOS UnitystationLauncher.csproj
-      - name: Codesign app
-        run: |
-          find "$RUNNER_TEMP/UnitystationLauncher.app/Contents/MacOS/"|while read fname; do
-            if [ -f "$fname" ]
-            then
-                echo "[INFO] Signing $fname"
-                codesign --force --timestamp --options=runtime --entitlements UnitystationLauncher.entitlements --sign "${{ env.SIGNING_IDENTITY }}" "$fname"
-            fi
-          done
-          codesign --force --timestamp --options=runtime --entitlements MyApp.entitlements --sign "${{ env.SIGNING_IDENTITY }}" "$RUNNER_TEMP/UnitystationLauncher.app"
-      - name: Notarise app
-        run: |
-          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/UnitystationLauncher.app" "$RUNNER_TEMP/UnitystationLauncher.zip"
-          xcrun notarytool submit "$RUNNER_TEMP/UnitystationLauncher.zip" --wait --keychain-profile "AC_PASSWORD"
-          xcrun stapler staple "$RUNNER_TEMP/UnitystationLauncher.app" ~/publish
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: StationHub-osx-64x
           path: ~/publish
 
   format:
