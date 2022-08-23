@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      TEAM_ID: MY_TEAM_ID
-      SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
     strategy:
       matrix:
         target-platform:
@@ -32,12 +29,7 @@ jobs:
           dotnet test
       - name: Publish
         run: |
-          if ${{ matrix.target-platform }} == "osx-64x"
-          then
-            dotnet publish --configuration Release --runtime osx-64x --cfbundlename UnitystationLauncher --cfbundledisplayname UnitystationLauncher --useapphost true --output ~/publish
-          else
-            dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
-          fi
+          dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
@@ -58,6 +50,9 @@ jobs:
         uses: xt0rted/dotnet-tool-restore@v1
 
       - name: Run dotnet format
-        uses: jfversluis/dotnet-format@v1.0.5
+        uses: jfversluis/dotnet-format@v1.0.9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          action: check
+          only-changed-files: true
+          workspace: "UnitystationLauncher.sln"
