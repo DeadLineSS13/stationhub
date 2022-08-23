@@ -32,7 +32,12 @@ jobs:
           dotnet test
       - name: Publish
         run: |
-          dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
+          if ${{ matrix.target-platform }} == "osx-64x"
+          then
+            dotnet publish --configuration Release --runtime osx-64x --cfbundlename UnitystationLauncher --cfbundledisplayname UnitystationLauncher --useapphost true --output ~/publish
+          else
+            dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
+          fi
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
