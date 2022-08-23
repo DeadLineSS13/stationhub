@@ -38,7 +38,6 @@ jobs:
     runs-on: macos-last
     env:
       TEAM_ID: MY_TEAM_ID
-      SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
     steps:
       - name: Setup Keychain
         run: |
@@ -61,6 +60,8 @@ jobs:
         run: |
           dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/UnitystationLauncher.app/Contents/MacOS UnitystationLauncher.csproj
       - name: Codesign app
+        env: 
+          SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
         run: |
           find "$RUNNER_TEMP/UnitystationLauncher.app/Contents/MacOS/"|while read fname; do
             if [ -f "$fname" ]
