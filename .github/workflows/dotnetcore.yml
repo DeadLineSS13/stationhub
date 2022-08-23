@@ -29,7 +29,7 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: StationHub-${{ matrix.target-platform }}
+          name: StationHub-win-x64
           path: ~/publish
       - name: Publish Linux
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: StationHub-${{ matrix.target-platform }}
+          name: StationHub-linux-x64
           path: ~/publish
       - name: Publish app
         run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS UnitystationLauncher.csproj
@@ -58,7 +58,7 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: StationHub-${{ matrix.target-platform }}
+          name: StationHub-osx-x64
           path: $RUNNER_TEMP/StationHub.app
 
   format:
