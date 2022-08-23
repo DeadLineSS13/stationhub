@@ -40,7 +40,7 @@ jobs:
           name: StationHub-linux-x64
           path: ~/publish
       - name: Publish app
-        run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS UnitystationLauncher.csproj
+        run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
       - name: Setup Keychain
         run: |
           security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
