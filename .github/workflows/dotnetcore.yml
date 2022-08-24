@@ -37,7 +37,7 @@ jobs:
           name: StationHub-linux-x64
           path: ~/publish-linux
       - name: Publish app
-        run: dotnet publish -c Release -r osx-x64 -o ~publish-macos/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
+        run: dotnet publish -c Release -r osx-x64 -o ~/publish-macos/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
