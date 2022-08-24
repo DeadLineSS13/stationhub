@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      TEAM_ID: MY_TEAM_ID
-      SIGNING_IDENTITY: thumbprint_of_certificate_added_to_keychain
     steps:
       - uses: actions/checkout@v1
       - name: Setup .NET Core
@@ -40,15 +37,12 @@ jobs:
           name: StationHub-linux-x64
           path: ~/publish-linux
       - name: Publish app
-        run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
-      - name: Notarise app
-        run: |
-          xcrun stapler staple "$RUNNER_TEMP/StationHub.app"
+        run: dotnet publish -c Release -r osx-x64 -o ~publish-macos/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-osx-x64
-          path: $RUNNER_TEMP/StationHub.app
+          path: ~/publish-macos
 
   format:
     runs-on: ubuntu-latest
