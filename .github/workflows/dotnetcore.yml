@@ -26,7 +26,7 @@ jobs:
       - name: Test
         run: |
           dotnet test
-      - name: Publish
+      - name: Publish Windows
         run: |
           dotnet publish --configuration Release --runtime ${{ matrix.target-platform }} --output ~/publish
       - name: Upload Build
@@ -36,6 +36,9 @@ jobs:
           path: ~/publish
   build-osx:
     runs-on: ubuntu-lates
+
+  build-osx-x64:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v1
       - name: Setup .NET Core
@@ -48,11 +51,16 @@ jobs:
       - name: Publish
         run: |
           dotnet publish --configuration Release --runtime osx-x64 --output ~/publish-osx
+      - name: Publish app
+        run: |
+          dotnet restore -r osx-x64
+          dotnet msbuild -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true -o: ~/publish
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
           name: StationHub-osx-x64
           path: ~/publish
+
   format:
     runs-on: ubuntu-latest
 
@@ -67,6 +75,9 @@ jobs:
         uses: xt0rted/dotnet-tool-restore@v1
 
       - name: Run dotnet format
-        uses: jfversluis/dotnet-format@v1.0.5
+        uses: jfversluis/dotnet-format@v1.0.9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          action: check
+          only-changed-files: true
+          workspace: "UnitystationLauncher.sln"
