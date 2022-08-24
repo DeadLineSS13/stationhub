@@ -43,7 +43,6 @@ jobs:
         run: dotnet publish -c Release -r osx-x64 -o $RUNNER_TEMP/StationHub.app/Contents/MacOS ./UnitystationLauncher/UnitystationLauncher.csproj
       - name: Notarise app
         run: |
-          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/StationHub.app" "$RUNNER_TEMP/StationHub.zip"
           xcrun stapler staple "$RUNNER_TEMP/StationHub.app"
       - name: Upload Build
         uses: actions/upload-artifact@v2
